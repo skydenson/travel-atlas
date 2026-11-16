@@ -46,6 +46,17 @@ html[data-theme="dark"] #dnaRange .dr-labs button.on{color:#e6fbff}
 html.booting body{opacity:0!important} html.booting{background:#EBDBB2!important} html.booting[data-theme="dark"]{background:#050918!important}</style>
 <style>/* Speed atlas: no Gallery on the Stamp Book page */
 #gallery-section,#guides-panel,#gallery-panel{display:none!important}</style>
+<style id="perf-layer">
+/* Performance layer: keeps the look, drops the per frame compositing work that made scrolling lag. */
+body::before{mix-blend-mode:normal!important;opacity:.42!important;will-change:transform}
+body::after{will-change:transform}
+html.pf-grain-on body::before{visibility:hidden}
+*,*::before,*::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.pagenav,.years-sticky{background:rgba(var(--bg-rgb),.97)!important}
+html[data-theme="dark"] .pagenav,html[data-theme="dark"] .years-sticky{background:rgba(5,9,24,.96)!important}
+:root[data-theme="dark"] body{background-attachment:scroll!important}
+.pagenav,.years-sticky,header.top{contain:layout paint}
+</style>
 </head>
 <body>
 

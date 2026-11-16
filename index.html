@@ -42,7 +42,7 @@ p{margin:.6em 0}.lede{font-size:clamp(17px,1.6vw,19px);color:var(--faint);max-wi
 .pin{position:absolute;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#F0D79A,#B8913E 55%,#6d5028);box-shadow:1px 2px 3px rgba(40,25,10,.4);z-index:3}
 .dk .sheet{transform:none;border-radius:18px;backdrop-filter:blur(6px)}.dk .sheet::before,.dk .tape,.dk .pin{display:none}
 /* header */
-header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:20;background:#EBDBB2;border-bottom:1px solid var(--line)}
 .bar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:10px max(5vw,16px);max-width:1340px;margin:0 auto}
 .logo{position:relative;display:flex;align-items:baseline;gap:7px;text-decoration:none;padding:6px 14px 8px;background:var(--slip);box-shadow:0 3px 8px rgba(70,45,15,.18);transform:rotate(-1.4deg)}
 .logo{padding:10px 22px 14px!important;background:linear-gradient(175deg,#FBF4E0,#EFE0B8)!important;box-shadow:0 8px 16px -6px rgba(58,40,18,.45)!important;transform:rotate(-2deg)!important}.logo::before{content:"";position:absolute;top:-9px;left:50%;width:62px;height:17px;margin-left:-31px;background:rgba(225,208,160,.8);transform:rotate(2deg)}
@@ -115,7 +115,9 @@ nav a:hover{color:var(--hot)}
 .ledger td{border-bottom:1px dotted var(--edge);padding:5px 6px;font:700 19px var(--num);color:var(--hot);white-space:nowrap}.dk .ledger td{font:500 14px var(--body)}
 .scroll{overflow-x:auto}
 /* featured */
-.album{position:relative;padding:18px}
+.album{position:relative;padding:18px;transform:none}.album::before{display:none}
+#featured{content-visibility:auto;contain-intrinsic-size:auto 1100px}
+.frame{contain:strict}
 .frame{position:relative;border:9px solid #1d150c;outline:1px solid #1d150c;outline-offset:3px;background:var(--sea);height:min(84vh,920px);min-height:520px;overflow:hidden}
 .frame::before{content:"";position:absolute;inset:-9px;border:9px dashed #F4E9CC;pointer-events:none;z-index:2}
 .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#EBDBB2}
@@ -324,7 +326,8 @@ document.getElementById('clearAll').addEventListener('click',()=>{picks.clear();
 
 // featured atlas, loaded only when asked
 const frame=document.getElementById('frame');
-function openAtlas(){if(frame.querySelector('iframe'))return;const f=document.createElement('iframe');f.src='featured-atlas.html';f.title='Featured Travel Atlas';f.setAttribute('allow','fullscreen');frame.appendChild(f);document.getElementById('cover').remove()}
+function openAtlas(){if(frame.querySelector('iframe'))return;const f=document.createElement('iframe');f.src='featured-atlas.html';f.title='Featured Travel Atlas';f.setAttribute('allow','fullscreen');frame.appendChild(f);document.getElementById('cover').remove();
+  if('IntersectionObserver' in window)new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting){try{f.contentWindow.globeSleep&&f.contentWindow.globeSleep()}catch(x){}}})).observe(frame)}
 document.getElementById('openAtlas').addEventListener('click',openAtlas);
 document.getElementById('fullAtlas').addEventListener('click',async()=>{openAtlas();try{await frame.requestFullscreen()}catch(e){toast('Full screen is not available here')}});
 
