@@ -326,6 +326,12 @@ document.getElementById('labels').addEventListener('click',e=>{const b=e.target.
 document.getElementById('addForm').addEventListener('submit',e=>{e.preventDefault();const i=document.getElementById('cIn'),q=i.value.trim().toLowerCase();if(!q)return;
   const hit=byName.get(q)||[...byName.entries()].find(([k])=>k.startsWith(q))?.[1];
   if(hit){picks.add(hit);i.value='';update();toast(hit+' inked on the chart')}else toast('That nation is not on this chart')});
+// ink as soon as a full name is typed (or picked from the list); wait a beat when it could still grow, like Niger into Nigeria
+{const i=document.getElementById('cIn');let t;
+ i.addEventListener('input',()=>{clearTimeout(t);const q=i.value.trim().toLowerCase();const hit=byName.get(q);if(!hit)return;
+  const longer=[...byName.keys()].some(k=>k!==q&&k.startsWith(q));
+  const go=()=>{if(i.value.trim().toLowerCase()!==q)return;if(!picks.has(hit)){picks.add(hit);update();toast(hit+' inked on the chart')}i.value=''};
+  longer?t=setTimeout(go,1200):go()})}
 document.getElementById('clearAll').addEventListener('click',()=>{picks.clear();update()});
 
 // featured atlas, loaded only when asked
