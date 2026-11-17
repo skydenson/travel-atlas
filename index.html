@@ -117,6 +117,10 @@ nav a:hover{color:var(--hot)}
 /* featured */
 .album{position:relative;padding:18px;transform:none}.album::before{display:none}
 #featured{content-visibility:auto;contain-intrinsic-size:auto 1100px}
+.takeover{position:fixed;inset:0;z-index:100;background:#EBDBB2;display:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.takeover.on{display:block}.takeover iframe{width:100%;height:100%;border:0;display:block;background:#EBDBB2}
+.tk-close{position:absolute;top:calc(env(safe-area-inset-top) + 6px);right:6px;z-index:2;width:44px;height:44px;padding:0;border-radius:50%;border:1.5px solid rgba(58,42,24,.55);background:radial-gradient(circle at 35% 30%,#FBF4E0,#E6D3A6);color:#3A2A18;font:400 26px/1 Georgia,serif;box-shadow:0 3px 8px rgba(58,40,18,.35);cursor:pointer;display:grid;place-items:center}
+html.locked,html.locked body{overflow:hidden;height:100%}
 .frame{contain:strict}
 .frame{position:relative;border:9px solid #1d150c;outline:1px solid #1d150c;outline-offset:3px;background:var(--sea);height:min(84vh,920px);min-height:520px;overflow:hidden}
 .frame::before{content:"";position:absolute;inset:-9px;border:9px dashed #F4E9CC;pointer-events:none;z-index:2}
@@ -328,8 +332,18 @@ document.getElementById('clearAll').addEventListener('click',()=>{picks.clear();
 const frame=document.getElementById('frame');
 function openAtlas(){if(frame.querySelector('iframe'))return;const f=document.createElement('iframe');f.src='featured-atlas.html';f.title='Featured Travel Atlas';f.setAttribute('allow','fullscreen');frame.appendChild(f);document.getElementById('cover').remove();
   if('IntersectionObserver' in window)new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting){try{f.contentWindow.globeSleep&&f.contentWindow.globeSleep()}catch(x){}}})).observe(frame)}
-document.getElementById('openAtlas').addEventListener('click',openAtlas);
-document.getElementById('fullAtlas').addEventListener('click',async()=>{openAtlas();try{await frame.requestFullscreen()}catch(e){toast('Full screen is not available here')}});
+const small=()=>matchMedia('(max-width:760px)').matches;
+let tk=null;
+function openTakeover(){
+  if(!tk){tk=document.createElement('div');tk.className='takeover';tk.setAttribute('role','dialog');tk.setAttribute('aria-label','Featured Travel Atlas');
+    tk.innerHTML='<button class="tk-close" type="button" aria-label="Close the atlas">&times;</button>';const f=document.createElement('iframe');f.src='featured-atlas.html';f.title='Featured Travel Atlas';tk.appendChild(f);document.body.appendChild(tk);
+    tk.querySelector('.tk-close').addEventListener('click',()=>{if(location.hash==='#open-atlas')history.back();else closeTakeover()})}
+  tk.classList.add('on');R.classList.add('locked');if(location.hash!=='#open-atlas'){try{location.hash='open-atlas'}catch(e){}}}
+function closeTakeover(){if(!tk)return;tk.classList.remove('on');R.classList.remove('locked');try{tk.querySelector('iframe').contentWindow.globeSleep&&tk.querySelector('iframe').contentWindow.globeSleep()}catch(e){}}
+addEventListener('hashchange',()=>{if(location.hash!=='#open-atlas')closeTakeover()});
+if(location.hash==='#open-atlas'){history.replaceState?location.hash='featured':0}
+document.getElementById('openAtlas').addEventListener('click',()=>small()?openTakeover():openAtlas());
+document.getElementById('fullAtlas').addEventListener('click',async()=>{if(small())return openTakeover();openAtlas();try{await frame.requestFullscreen()}catch(e){toast('Full screen is not available here')}});
 
 let tt;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600)}
 function drawVis(){const s=d3.select('#visMap');if(!feats.length)return;s.html('');
