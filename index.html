@@ -133,6 +133,8 @@ html.locked,html.locked body{overflow:hidden;height:100%}
 .cover p{color:var(--faint);max-width:46ch;margin:0 auto 16px}
 .frame-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
 .frame-bar span{color:var(--faint);font-size:15px;font-style:italic}
+.srcs{margin:14px 2px 0;font-size:15px;color:var(--faint);line-height:1.6}.srcs a{color:var(--hot);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.who-note{margin:6px 0 0!important;font:700 26px/1 var(--num);color:var(--hot);transform:rotate(-3deg)}
 /* app */
 .app{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,5vw,64px);align-items:center}
 .ticket{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 150px;background:linear-gradient(170deg,var(--slip),#EFE0B8);box-shadow:var(--shadow);transform:rotate(-.6deg)}
@@ -230,18 +232,19 @@ footer .wrap{display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap}
 </div></section>
 
 <section class="band" id="featured"><div class="wrap">
-  <div class="sec-intro"><h2 class="sh"><span>Try out the Travel Atlas</span></h2><p class="lede">A finished atlas, open on the desk. Explore every page of a real log, built the same way yours will be.</p></div>
+  <div class="sec-intro"><h2 class="sh"><span>Try out the Travel Atlas</span></h2><p class="lede">A finished atlas, open on the desk: IShowSpeed's travels, built the same way yours will be.</p></div>
   <div class="sheet album">
     <span class="pin" style="left:12px;top:12px"></span><span class="pin" style="right:12px;top:12px"></span>
     <div class="frame" id="frame">
       <div class="cover" id="cover"><div>
         <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="92" fill="none" stroke="var(--ink)" stroke-width="1.2"/><circle cx="100" cy="100" r="84" fill="none" stroke="var(--ink)" stroke-width=".6"/><g fill="var(--ink)"><path d="M100 14 108 100 100 186 92 100z" opacity=".85"/><path d="M14 100 100 92 186 100 100 108z" opacity=".55"/></g><path d="M100 14 108 100 100 100z" fill="var(--hot)"/><g font-family="IM Fell English SC" font-size="14" fill="var(--ink)" text-anchor="middle"><text x="100" y="10">N</text><text x="100" y="200">S</text><text x="193" y="105">E</text><text x="7" y="105">W</text></g></svg>
-        <h3>A featured Travel Atlas</h3>
-        <p>Every tour, route and stamp from one of the most travelled logs on the internet, open right here.</p>
+        <p class="who-note">The travel log of</p><h3>IShowSpeed</h3>
+        <p>Every tour, route and stamp from his streams around the world, charted in a Travel Atlas.</p>
         <button class="btn" type="button" id="openAtlas">Unroll the atlas</button>
       </div></div>
     </div>
     <div class="frame-bar"><span>Scroll inside the frame to move through the atlas. Use its own menu for Visualizer, Stats and Stamp Book.</span><button class="btn ghost" type="button" id="fullAtlas">Full screen</button></div>
+    <p class="srcs">Compiled from public records of his streams. Follow his travels at <a href="https://www.exspeedia.com" target="_blank" rel="noopener">Exspeedia by Expedia</a> · <a href="https://ishowmap.com" target="_blank" rel="noopener">IShowMap</a> · <a href="https://streamscharts.com/tools/irl-map" target="_blank" rel="noopener">Streams Charts IRL Map</a>. Not affiliated with IShowSpeed or Expedia.</p>
   </div>
 </div></section>
 
@@ -336,13 +339,13 @@ document.getElementById('clearAll').addEventListener('click',()=>{picks.clear();
 
 // featured atlas, loaded only when asked
 const frame=document.getElementById('frame');
-function openAtlas(){if(frame.querySelector('iframe'))return;const f=document.createElement('iframe');f.src='featured-atlas.html';f.title='Featured Travel Atlas';f.setAttribute('allow','fullscreen');frame.appendChild(f);document.getElementById('cover').remove();
+function openAtlas(){if(frame.querySelector('iframe'))return;const f=document.createElement('iframe');f.src='featured-atlas.html';f.title='IShowSpeed Travel Atlas';f.setAttribute('allow','fullscreen');frame.appendChild(f);document.getElementById('cover').remove();
   if('IntersectionObserver' in window)new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting){try{f.contentWindow.globeSleep&&f.contentWindow.globeSleep()}catch(x){}}})).observe(frame)}
 const small=()=>matchMedia('(max-width:760px)').matches;
 let tk=null;
 function openTakeover(){
-  if(!tk){tk=document.createElement('div');tk.className='takeover';tk.setAttribute('role','dialog');tk.setAttribute('aria-label','Featured Travel Atlas');
-    tk.innerHTML='<button class="tk-close" type="button" aria-label="Close the atlas">&times;</button>';const f=document.createElement('iframe');f.src='featured-atlas.html';f.title='Featured Travel Atlas';tk.appendChild(f);document.body.appendChild(tk);
+  if(!tk){tk=document.createElement('div');tk.className='takeover';tk.setAttribute('role','dialog');tk.setAttribute('aria-label','IShowSpeed Travel Atlas');
+    tk.innerHTML='<button class="tk-close" type="button" aria-label="Close the atlas">&times;</button>';const f=document.createElement('iframe');f.src='featured-atlas.html';f.title='IShowSpeed Travel Atlas';tk.appendChild(f);document.body.appendChild(tk);
     tk.querySelector('.tk-close').addEventListener('click',()=>{if(location.hash==='#open-atlas')history.back();else closeTakeover()})}
   tk.classList.add('on');R.classList.add('locked');if(location.hash!=='#open-atlas'){try{location.hash='open-atlas'}catch(e){}}}
 function closeTakeover(){if(!tk)return;tk.classList.remove('on');R.classList.remove('locked');try{tk.querySelector('iframe').contentWindow.globeSleep&&tk.querySelector('iframe').contentWindow.globeSleep()}catch(e){}}
